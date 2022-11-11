@@ -97,5 +97,5 @@ export const login = async (req, res) => {
   req.session.email = email;
   req.session.tipo = user.tipo;
 
-  res.sendStatus(200);
+  res.status(200).json({ userType: user.tipo });
 }
