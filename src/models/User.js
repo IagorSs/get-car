@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
+import Location from './Location.js';
 
 class User extends Model {}
 
@@ -30,6 +31,10 @@ User.init({
   }
 }, {
   sequelize
+});
+
+User.hasMany(Location, {
+  onDelete: 'RESTRICT'
 });
 
 export default User;
