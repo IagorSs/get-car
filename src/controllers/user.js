@@ -95,6 +95,7 @@ export const login = async (req, res) => {
 
   req.session.loggedin = true;
   req.session.email = email;
+  req.session.tipo = user.tipo;
 
   res.sendStatus(200);
 }
