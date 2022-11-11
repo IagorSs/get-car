@@ -1,7 +1,10 @@
 import { Router } from 'express';
+import userRoutes from './user.routes.js';
 
 const router = Router();
 
-router.get('*', (req, res) => res.sendStatus(404));
+router.use('/user', userRoutes);
+
+router.all('*', (req, res) => res.sendStatus(404));
 
 export default router;
