@@ -11,7 +11,7 @@ const isEmailFormatted = (email) => {
 const isCPFFormatted = (cpf) => {
   return cpf
     .match(
-      /[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}/
+      /^[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}$/
     ) !== null;
 }
 
