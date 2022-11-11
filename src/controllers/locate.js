@@ -76,3 +76,46 @@ export const locate = async (req, res) => {
 
   return res.status(201).json(location);
 }
+
+export const refund = async (req, res) => {
+  const { placa } = req.body;
+
+  if(!req.session.loggedin) return res
+    .status(401)
+    .json({
+      message: "You're not logged"
+    });
+
+  if(req.session.tipo !== 'ADMIN') return res
+    .status(403)
+    .json({
+      message: "You don't have permission to do this"
+    });
+
+  if (
+    typeof placa !== 'string'
+  ) return res
+    .status(400)
+    .json({
+      message: "Invalid request body"
+    });
+
+  if(!isPlacaFormatted(placa)) return res
+    .status(400)
+    .json({
+      message: "Unformatted placa"
+    });
+
+  const car = await getCarByPlaca(placa);
+
+  if (car === null) return res
+    .status(404)
+    .json({
+      message: "Car doesn't exists in database"
+    });
+
+  car.disponivel = true;
+  car.save();
+
+  return res.sendStatus(200);
+}
