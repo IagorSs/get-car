@@ -15,9 +15,12 @@ server.use(cors());
 
 server.use(routes);
 
-const { PORT } = process.env;
+const { PORT, DB_NAME } = process.env;
 
-server.listen(PORT, async () => {
-  await dbConnection.sync();
+dbConnection
+  .sync()
+  .then(() => console.log(`Banco de dados conectado: ${DB_NAME}`));
+
+server.listen(PORT, () => {
   console.log(`Server Ready in http://localhost:${PORT}`);
 });
