@@ -1,11 +1,6 @@
 import CarModel from '../models/Car.js';
-
-const isPlacaFormatted = (placa) => {
-  return placa
-    .match(
-      /^[A-Z]{3}[0-9][A-Z][0-9]{2}$|^[A-Z]{3}-[0-9]{4}$/
-    ) !== null;
-}
+import isPlacaFormatted from '../utils/isPlacaFormatted.js';
+import getCarByPlaca from '../services/getCarByPlaca.js';
 
 const isCarModelValid = (carModel) => {
   return typeof(carModel.modelo) === 'string'
@@ -13,8 +8,6 @@ const isCarModelValid = (carModel) => {
     && typeof(carModel.disponivel) === 'boolean'
     && typeof(carModel.placa) === 'string';
 }
-
-const getCarByPlaca = (placa) => CarModel.findOne({ where: { placa } });
 
 export const register = async (req, res) => {
   const carData = req.body;

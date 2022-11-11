@@ -1,17 +1,12 @@
 import UserModel from '../models/User.js';
+import getUserByCPF from '../services/getUserByCPF.js';
+import isCPFFormatted from '../utils/isCPFFormatted.js';
 
 const isEmailFormatted = (email) => {
   return email
     .toLowerCase()
     .match(
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    ) !== null;
-}
-
-const isCPFFormatted = (cpf) => {
-  return cpf
-    .match(
-      /^[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}$/
     ) !== null;
 }
 
@@ -23,8 +18,6 @@ const isUserModelValid = (userModel) => {
 }
 
 const getUserByEmail = (email) => UserModel.findOne({ where: { email } });
-
-const getUserByCPF = (cpf) => UserModel.findOne({ where: { cpf } });
 
 export const register = async (req, res) => {
   const userData = req.body;
