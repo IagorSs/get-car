@@ -17,6 +17,11 @@ const isUserModelValid = (userModel) => {
     && typeof(userModel.password) === 'string';
 }
 
+const isTipoValid = (tipo) => {
+  return typeof(tipo) === 'string'
+    && ['ADMIN', 'NORMAL'].includes(tipo);
+}
+
 const getUserByEmail = (email) => UserModel.findOne({ where: { email } });
 
 export const register = async (req, res) => {
@@ -38,6 +43,12 @@ export const register = async (req, res) => {
     .status(400)
     .json({
       message: "Unformatted cpf"
+    });
+
+  if(userData.tipo && !isTipoValid(userData.tipo)) return res
+    .status(400)
+    .json({
+      message: "Invalid tipo"
     });
 
   if (await getUserByEmail(userData.email)) return res
