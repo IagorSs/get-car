@@ -61,7 +61,40 @@ export const register = async (req, res) => {
 
   const user = await UserModel.create(userData);
 
-  delete user.password;
-
   return res.status(201).json(user);
+}
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) return res
+    .status(400)
+    .json({
+      message: "Invalid request body"
+    });
+
+  if(!isEmailFormatted(email)) return res
+    .status(400)
+    .json({
+      message: "Unformatted email"
+    });
+
+  const user = await getUserByEmail(email);
+
+  if (!user) return res
+    .status(401)
+    .json({
+      message: "Incorrect email"
+    });
+
+  if (user.password !== password) return res
+    .status(401)
+    .json({
+      message: "Incorrect password"
+    });
+
+  req.session.loggedin = true;
+  req.session.email = email;
+
+  res.sendStatus(200);
 }
