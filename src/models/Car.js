@@ -9,7 +9,7 @@ Car.init({
     allowNull: false
   },
   marca: {
-    type: DataTypes.ENUM('FIAT', 'VOLKSWAGEN', 'CHEVROLET', 'TOYOTA', 'MERCEDES'),
+    type: DataTypes.STRING,
     allowNull: false
   },
   disponivel: {

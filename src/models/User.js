@@ -24,7 +24,7 @@ User.init({
     allowNull: false
   },
   tipo: {
-    type: DataTypes.ENUM('NORMAL', 'ADMIN'),
+    type: DataTypes.STRING,
     allowNull: false,
     defaultValue: 'NORMAL'
   }
