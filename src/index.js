@@ -1,6 +1,7 @@
 import express, {
   json,
 } from 'express';
+import session from 'express-session';
 import cors from 'cors';
 import { dbConnection } from './config';
 import routes from './routes';
@@ -10,6 +11,11 @@ dotenv.config();
 
 const server = express();
 
+server.use(session({
+  secret: "aabb",
+  resave: true,
+  saveUninitialized: true
+}));
 server.use(json());
 server.use(cors());
 
