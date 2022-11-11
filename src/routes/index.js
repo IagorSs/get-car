@@ -3,12 +3,23 @@ import userRoutes from './user.routes.js';
 import carRoutes from './car.routes.js';
 import locateRoutes from './locate.routes.js';
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const router = Router();
 
-router.use('/user', userRoutes);
-router.use('/car', carRoutes);
-router.use('/locate', locateRoutes);
+router.get('/', (req, res) => res.sendFile(path.join(__dirname,'../screen/login.html')));
 
-router.all('*', (req, res) => res.sendStatus(404));
+const apiRoutes = Router();
+
+apiRoutes.use('/user', userRoutes);
+apiRoutes.use('/car', carRoutes);
+apiRoutes.use('/locate', locateRoutes);
+
+router.use('/api', apiRoutes);
+
+router.all('*', (req, res) => res.redirect('/'));
 
 export default router;
