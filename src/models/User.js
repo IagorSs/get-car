@@ -22,6 +22,11 @@ User.init({
   password: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  tipo: {
+    type: DataTypes.ENUM('NORMAL', 'ADMIN'),
+    allowNull: false,
+    defaultValue: 'NORMAL'
   }
 }, {
   sequelize
