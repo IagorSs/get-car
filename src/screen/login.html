@@ -3,22 +3,71 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      #form * {
+        width: 100%;
+      }
+
+      #form > * + * {
+        margin-top: 16px;
+      }
+    </style>
     <title>Get car</title>
   </head>
   <body>
     <header
-      style="height: 100px; width: 100%; background-color: mediumseagreen"
+      style="
+        height: 100px;
+        width: 100%;
+        background-color: mediumseagreen;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
     >
       <h1>Get <span style="color: #d4db26">Car</span></h1>
     </header>
 
-    <main>
-      <!-- TODO do js for this -->
-      <form action="/api/user/login" method="post">
-        <input type="email" name="email" />
-        <input type="password" name="password" />
+    <main style="margin-top: 20px">
+      <form id="form" style="width: 200px; margin: auto">
+        <div>
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" />
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" />
+        </div>
         <button type="submit">Enviar</button>
       </form>
     </main>
+    <script>
+      document.getElementById("form").onsubmit = (ev) => {
+        ev.preventDefault();
+
+        console.log({
+          el: document.getElementById("form").elements,
+        });
+
+        const { email, password } = document.getElementById("form").elements;
+
+        fetch("./api/user/login", {
+          body: JSON.stringify({
+            email: email.value,
+            password: password.value,
+          }),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((res) => console.log({ res }));
+      };
+    </script>
   </body>
 </html>
