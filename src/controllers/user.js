@@ -11,10 +11,11 @@ const isEmailFormatted = (email) => {
 }
 
 const isUserModelValid = (userModel) => {
-  return typeof(userModel.cpf) === 'string'
-    && typeof(userModel.nome) === 'string'
-    && typeof(userModel.email) === 'string'
-    && typeof(userModel.password) === 'string';
+  return typeof(userModel.cpf) === 'string' && userModel.cpf !== ""
+    && typeof(userModel.nome) === 'string' && userModel.nome !== ""
+    && typeof(userModel.email) === 'string' && userModel.email !== ""
+    && typeof(userModel.password) === 'string' && userModel.password !== ""
+    && typeof(userModel.nascimento) === 'string' && userModel.nascimento !== "";
 }
 
 const isTipoValid = (tipo) => {
