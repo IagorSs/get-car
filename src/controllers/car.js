@@ -46,3 +46,21 @@ export const register = async (req, res) => {
 
   return res.status(201).json(car);
 }
+
+export const getAll = async (req, res) => {
+  if(!req.session.loggedin) return res
+    .status(401)
+    .json({
+      message: "You're not logged"
+    });
+  
+  if(req.session.tipo !== 'ADMIN') return res
+    .status(403)
+    .json({
+      message: "You don't have permission to do this"
+    });
+    
+  const cars = await CarModel.findAll();
+
+  return res.status(200).json(cars);
+}
