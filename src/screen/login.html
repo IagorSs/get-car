@@ -39,19 +39,41 @@
           <input type="email" name="email" id="email" />
         </div>
         <div>
-          <label for="password">Password</label>
+          <label for="password">Senha</label>
           <input type="password" name="password" id="password" />
         </div>
-        <button type="submit">Enviar</button>
+
+        <button type="submit">Login</button>
+
+        <input
+          type="button"
+          value="Cadastrar"
+          onclick="location.pathname = 'register'"
+        />
       </form>
     </main>
     <script>
+      function tryRedirect() {
+        const userType = sessionStorage.getItem("userType");
+
+        switch (userType) {
+          case "ADMIN":
+            location.pathname = "/admin/home";
+            break;
+
+          case "NORMAL":
+            location.pathname = "/home";
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      tryRedirect();
+
       document.getElementById("form").onsubmit = (ev) => {
         ev.preventDefault();
-
-        console.log({
-          el: document.getElementById("form").elements,
-        });
 
         const { email, password } = document.getElementById("form").elements;
 
@@ -65,8 +87,17 @@
             "Content-Type": "application/json",
           },
         })
-          .then((res) => res.json())
-          .then((res) => console.log({ res }));
+          .then((res) => {
+            if (res.status >= 400) throw res;
+            return res.json();
+          })
+          .then(({ userType }) => {
+            alert("Login with success!");
+            sessionStorage.setItem("userType", userType);
+            tryRedirect();
+          })
+          .catch((err) => err.json())
+          .then(({ message }) => alert(message));
       };
     </script>
   </body>
