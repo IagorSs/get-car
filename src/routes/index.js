@@ -11,6 +11,7 @@ const __dirname = path.dirname(__filename);
 const router = Router();
 
 router.get('/', (req, res) => res.sendFile(path.join(__dirname,'../screen/login.html')));
+router.get('/register', (req, res) => res.sendFile(path.join(__dirname,'../screen/register.html')));
 
 const apiRoutes = Router();
 

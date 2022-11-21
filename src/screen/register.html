@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      #form * {
+        width: 100%;
+      }
+
+      #form > * + * {
+        margin-top: 16px;
+      }
+    </style>
+    <title>Get car</title>
+  </head>
+  <body>
+    <header
+      style="
+        height: 100px;
+        width: 100%;
+        background-color: mediumseagreen;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <h1>Get <span style="color: #d4db26">Car</span></h1>
+    </header>
+
+    <main style="margin-top: 20px">
+      <form id="form" style="width: 200px; margin: auto">
+        <div>
+          <label for="cpf">CPF</label>
+          <input name="cpf" id="cpf" />
+        </div>
+
+        <div>
+          <label for="name">Nome</label>
+          <input name="name" id="name" />
+        </div>
+
+        <div>
+          <label for="birthDate">Nascimento</label>
+          <input type="date" name="birthDate" id="birthDate" />
+        </div>
+
+        <div>
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" />
+        </div>
+
+        <div>
+          <label for="password">Senha</label>
+          <input type="password" name="password" id="password" />
+        </div>
+
+        <button type="submit">Cadastrar e entrar</button>
+      </form>
+    </main>
+    <script>
+      document.getElementById("form").onsubmit = (ev) => {
+        ev.preventDefault();
+
+        const { email, password, birthDate, name, cpf } =
+          document.getElementById("form").elements;
+
+        fetch("./api/user", {
+          body: JSON.stringify({
+            email: email.value,
+            password: password.value,
+            cpf: cpf.value,
+            nome: name.value,
+            nascimento: birthDate.value,
+          }),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => {
+            if (res.status >= 400) throw res;
+
+            return res.json();
+          })
+          .then((res) => {
+            if (res.status >= 400) alert(res.message);
+
+            alert("User created!");
+            location.pathname = "/";
+          })
+          .catch((error) => error.json())
+          .then(({ message }) => alert(message));
+      };
+    </script>
+  </body>
+</html>
