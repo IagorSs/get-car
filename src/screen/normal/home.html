@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      #form * {
+        width: 100%;
+      }
+
+      #form > * + * {
+        margin-top: 16px;
+      }
+    </style>
+    <title>Get car</title>
+  </head>
+  <body>
+    <header
+      style="
+        height: 100px;
+        width: 100%;
+        background-color: mediumseagreen;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <h1>Get <span style="color: #d4db26">Car</span></h1>
+    </header>
+
+    <main style="margin-top: 20px; width: 200px; margin: auto">
+      <h1>
+        Você já está cadastrado, busque um administrador para fazer locação do
+        seu carro!
+      </h1>
+
+      <input type="button" value="Logout" id="logout-button" />
+    </main>
+    <script>
+      const userType = sessionStorage.getItem("userType");
+
+      switch (userType) {
+        case "ADMIN":
+          location.pathname = "/admin/home";
+          break;
+
+        case "NORMAL":
+          break;
+
+        default:
+          location.pathname = "/";
+          break;
+      }
+
+      document.getElementById("logout-button").onclick = () => {
+        sessionStorage.clear();
+        location.reload();
+      };
+    </script>
+  </body>
+</html>
