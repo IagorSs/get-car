@@ -3,7 +3,7 @@ import isPlacaFormatted from '../utils/isPlacaFormatted.js';
 import getCarByPlaca from '../services/getCarByPlaca.js';
 
 const isCarModelValid = (carModel) => {
-  return typeof(carModel.modelo) === 'string'
+  return typeof(carModel.modelo) === 'string' && carModel.modelo !== ""
     && typeof(carModel.marca) === 'string' && ['FIAT', 'VOLKSWAGEN', 'CHEVROLET', 'TOYOTA', 'MERCEDES'].includes(carModel.marca)
     && typeof(carModel.disponivel) === 'boolean'
     && typeof(carModel.placa) === 'string';
