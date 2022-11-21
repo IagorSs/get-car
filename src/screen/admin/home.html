@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      form * {
+        width: 100%;
+      }
+
+      form > * + * {
+        margin-top: 16px;
+      }
+
+      #car-list > * + * {
+        margin-top: 8px;
+      }
+    </style>
+    <title>Get car</title>
+  </head>
+  <body>
+    <header
+      style="
+        height: 100px;
+        width: 100%;
+        background-color: mediumseagreen;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <h1>Get <span style="color: #d4db26">Car</span></h1>
+    </header>
+
+    <main style="margin-top: 20px; width: 200px; margin: auto">
+      <form id="register-car">
+        <h2>Registrar novo carro</h2>
+        <div>
+          <label for="model">Modelo</label>
+          <input name="model" id="model" />
+        </div>
+
+        <div>
+          <label for="mark">Marca</label>
+          <select name="mark" id="mark">
+            <option value="FIAT">Fiat</option>
+            <option value="VOLKSWAGEN">Volkswagen</option>
+            <option value="CHEVROLET">Chevrolet</option>
+            <option value="TOYOTA">Toyota</option>
+            <option value="MERCEDES">Mercedes</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="board-register">Placa</label>
+          <input name="board" id="board-register" />
+        </div>
+
+        <button type="submit">Cadastrar carro</button>
+      </form>
+
+      <hr />
+
+      <form id="refound-car">
+        <h2>Devolver carro</h2>
+        <div>
+          <label for="board-refound">Placa</label>
+          <input name="board" id="board-refound" />
+        </div>
+
+        <button type="submit">Devolver</button>
+      </form>
+
+      <hr />
+
+      <form id="locate-car">
+        <h2>Alugar carro</h2>
+
+        <div>
+          <label for="board">Placa</label>
+          <input name="board" id="board" />
+        </div>
+
+        <div>
+          <label for="cpf">CPF do locador</label>
+          <input name="cpf" id="cpf" />
+        </div>
+
+        <div>
+          <label for="locateTime">Tempo de locação (em dias)</label>
+          <input type="number" name="locateTime" id="locateTime" />
+        </div>
+
+        <div>
+          <label for="value">Valor (em reais)</label>
+          <input type="number" step="0.01" name="value" id="value" />
+        </div>
+
+        <button type="submit">Alugar</button>
+      </form>
+
+      <div id="car-list" style="margin-top: 24px"></div>
+    </main>
+    <script>
+      const userType = sessionStorage.getItem("userType");
+
+      switch (userType) {
+        case "ADMIN":
+          break;
+
+        case "NORMAL":
+          location.pathname = "/home";
+          break;
+
+        default:
+          location.pathname = "/";
+          break;
+      }
+
+      const searchCars = () => {
+        fetch("/api/car", {
+          method: "GET",
+        })
+          .then((res) => {
+            if (res.status >= 400) throw res;
+            return res.json();
+          })
+          .then((cars) => {
+            const carList = document.getElementById("car-list");
+            carList.innerHTML = "";
+
+            cars.forEach((car) => {
+              const carCard = document.createElement("div");
+              carCard.style.border = "1px solid black";
+              carCard.style.borderRadius = "8px";
+              carCard.style.padding = "4px";
+
+              const boardElement = document.createElement("h4");
+              boardElement.innerText = car.placa;
+              carCard.appendChild(boardElement);
+
+              const markElement = document.createElement("p");
+              markElement.innerHTML = `<b>Marca: </b>${car.marca}`;
+              carCard.appendChild(markElement);
+
+              const modelElement = document.createElement("p");
+              modelElement.innerHTML = `<b>Modelo: </b>${car.modelo}`;
+              carCard.appendChild(modelElement);
+
+              const disponivelElement = document.createElement("p");
+              disponivelElement.innerText = car.disponivel
+                ? "Disponível"
+                : "Não disponível";
+              disponivelElement.style.color = car.disponivel ? "green" : "red";
+              carCard.appendChild(disponivelElement);
+
+              carList.appendChild(carCard);
+            });
+          })
+          .catch((err) => err.json())
+          .then(({ message }) => alert(message));
+      };
+
+      document.getElementById("locate-car").onsubmit = (ev) => {
+        ev.preventDefault();
+
+        const { board, cpf, locateTime, value } =
+          document.getElementById("locate-car").elements;
+
+        fetch("/api/locate", {
+          body: JSON.stringify({
+            locatedData: new Date().toISOString().slice(0, 10),
+            placa: board.value,
+            cpf: cpf.value,
+            locatedTimeDays: parseInt(locateTime.value),
+            value: parseFloat(value.value),
+          }),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => {
+            if (res.status >= 400) throw res;
+            return res.json();
+          })
+          .then(() => {
+            alert("Car located with success!");
+            searchCars();
+          })
+          .catch((err) => err.json())
+          .then(({ message }) => alert(message));
+      };
+
+      document.getElementById("refound-car").onsubmit = (ev) => {
+        ev.preventDefault();
+
+        const { board } = document.getElementById("refound-car").elements;
+
+        fetch("/api/locate/refund", {
+          body: JSON.stringify({
+            placa: board.value,
+          }),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => {
+            if (res.status >= 400) throw res;
+
+            alert("Car refund with success!");
+            searchCars();
+          })
+          .catch((err) => err.json())
+          .then(({ message }) => alert(message));
+      };
+
+      searchCars();
+
+      document.getElementById("register-car").onsubmit = (ev) => {
+        ev.preventDefault();
+
+        const { model, mark, board } =
+          document.getElementById("register-car").elements;
+
+        fetch("/api/car", {
+          body: JSON.stringify({
+            modelo: model.value,
+            marca: mark.value,
+            placa: board.value,
+            disponivel: true,
+          }),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => {
+            if (res.status >= 400) throw res;
+            return res.json();
+          })
+          .then(({ userType }) => {
+            alert("Car register with success!");
+            searchCars();
+          })
+          .catch((err) => err.json())
+          .then(({ message }) => alert(message));
+      };
+    </script>
+  </body>
+</html>
