@@ -13,6 +13,9 @@ const router = Router();
 router.get('/', (req, res) => res.sendFile(path.join(__dirname,'../screen/login.html')));
 router.get('/register', (req, res) => res.sendFile(path.join(__dirname,'../screen/register.html')));
 
+router.get('/admin/home', (req, res) => res.sendFile(path.join(__dirname,'../screen/admin/home.html')));
+router.get('/home', (req, res) => res.sendFile(path.join(__dirname,'../screen/normal/home.html')));
+
 const apiRoutes = Router();
 
 apiRoutes.use('/user', userRoutes);
